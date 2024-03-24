@@ -9,12 +9,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
 )
 
 type Environment struct {
 	LISTEN_ADDRESS       string
-	CORS_ORIGINS         []string
 	PLAUSIBLE_SCRIPT_URL string
 	PLAUSIBLE_API_URL    string
 }
@@ -23,7 +21,6 @@ func ParseEnvironment() *Environment {
 	LISTEN_ADDRESS := os.Getenv("LISTEN_ADDRESS")
 	PLAUSIBLE_SCRIPT_URL := os.Getenv("PLAUSIBLE_SCRIPT_URL")
 	PLAUSIBLE_API_URL := os.Getenv("PLAUSIBLE_API_URL")
-	CORS_ORIGINS := os.Getenv("CORS_ORIGINS")
 
 	if LISTEN_ADDRESS == "" {
 		LISTEN_ADDRESS = "localhost:8080"
@@ -37,13 +34,7 @@ func ParseEnvironment() *Environment {
 		PLAUSIBLE_API_URL = "https://plausible.io/api/event"
 	}
 
-	if CORS_ORIGINS == "" {
-		panic("CORS_ORIGINS environment variable is required")
-	}
-
-	PARSED_CORS_ORIGINS := strings.Split(CORS_ORIGINS, ",")
-
-	return &Environment{LISTEN_ADDRESS: LISTEN_ADDRESS, PLAUSIBLE_SCRIPT_URL: PLAUSIBLE_SCRIPT_URL, PLAUSIBLE_API_URL: PLAUSIBLE_API_URL, CORS_ORIGINS: PARSED_CORS_ORIGINS}
+	return &Environment{LISTEN_ADDRESS: LISTEN_ADDRESS, PLAUSIBLE_SCRIPT_URL: PLAUSIBLE_SCRIPT_URL, PLAUSIBLE_API_URL: PLAUSIBLE_API_URL}
 }
 
 func buildGetScriptHandler(plausibleScriptUrl string) func(w http.ResponseWriter, r *http.Request) {
@@ -103,7 +94,6 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 
 		for key, values := range r.Header {
 			for _, value := range values {
-				fmt.Println(key, value)
 				// Let's not copy the Cookie header
 				if key != "Cookie" {
 					request.Header.Add(key, value)
@@ -111,7 +101,14 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 			}
 		}
 
-		request.Header.Set("X-Forwarded-For", r.RemoteAddr)
+		// When utilizing a CDN (like CloudFront), it will integrate all IP addresses
+		// during the request flow. The first one will be the actual client IP address
+		// (the one we're interested in). The other ones will be the intermediate proxies.
+		xForwardedForHeader := r.Header.Get("X-Forwarded-For")
+		xForwardedForHeaderIpAddresses := strings.Split(xForwardedForHeader, ",")
+		firstIpAddress := strings.Trim(xForwardedForHeaderIpAddresses[0], " ")
+
+		request.Header.Set("X-Forwarded-For", firstIpAddress)
 
 		client := http.DefaultClient
 		response, error := client.Do(request)
@@ -151,12 +148,6 @@ func main() {
 	env := ParseEnvironment()
 
 	r.Use(middleware.Logger)
-	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   env.CORS_ORIGINS,
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowCredentials: false,
-		MaxAge:           300,
-	}))
 
 	r.Get("/js/{name}", buildGetScriptHandler(env.PLAUSIBLE_SCRIPT_URL))
 	r.Post("/api/event", buildPostEventHandler(env.PLAUSIBLE_API_URL))
