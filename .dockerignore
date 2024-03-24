@@ -1,0 +1,7 @@
+# flyctl launch added from .devbox/.gitignore
+.devbox/**/*
+.devbox/**/.*
+
+# flyctl launch added from .gitignore
+**/.devbox
+fly.toml
