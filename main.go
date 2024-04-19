@@ -105,12 +105,10 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 		// during the request flow. The first one will be the actual client IP address
 		// (the one we're interested in). The other ones will be the intermediate proxies.
 		xForwardedForHeader := r.Header.Get("X-Forwarded-For")
-		println("X-Forwarded-For")
-		println(xForwardedForHeader)
 		xForwardedForHeaderIpAddresses := strings.Split(xForwardedForHeader, ",")
 		firstIpAddress := strings.Trim(xForwardedForHeaderIpAddresses[0], " ")
 
-		request.Header.Set("X-Forwarded-For", firstIpAddress)
+		request.Header.Add("X-Forwarded-For", firstIpAddress)
 
 		client := http.DefaultClient
 		response, error := client.Do(request)
