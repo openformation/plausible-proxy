@@ -142,6 +142,13 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 	}
 }
 
+func buildgetHealthHandler() func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(http.StatusText(http.StatusOK)))
+	}
+}
+
 func main() {
 	r := chi.NewRouter()
 
@@ -149,6 +156,7 @@ func main() {
 
 	r.Use(middleware.Logger)
 
+	r.Get("/health", buildgetHealthHandler())
 	r.Get("/js/{name}", buildGetScriptHandler(env.PLAUSIBLE_SCRIPT_URL))
 	r.Post("/api/event", buildPostEventHandler(env.PLAUSIBLE_API_URL))
 
