@@ -105,8 +105,6 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 
 		if cfConnectingIp != "" {
 			request.Header.Add("X-Forwarded-For", cfConnectingIp)
-
-			fmt.Println("CF-Connecting-IP: " + cfConnectingIp)
 		} else {
 			// When utilizing a CDN (like CloudFront), it will integrate all IP addresses
 			// during the request flow. The first one will be the actual client IP address
@@ -116,8 +114,6 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 			firstIpAddress := strings.Trim(xForwardedForHeaderIpAddresses[0], " ")
 
 			request.Header.Add("X-Forwarded-For", firstIpAddress)
-
-			fmt.Println("X-Forwarded-For: " + firstIpAddress)
 		}
 
 		client := http.DefaultClient
