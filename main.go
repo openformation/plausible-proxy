@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -100,15 +99,6 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 				}
 			}
 		}
-
-		// When utilizing a CDN (like CloudFront), it will integrate all IP addresses
-		// during the request flow. The first one will be the actual client IP address
-		// (the one we're interested in). The other ones will be the intermediate proxies.
-		xForwardedForHeader := r.Header.Get("X-Forwarded-For")
-		xForwardedForHeaderIpAddresses := strings.Split(xForwardedForHeader, ",")
-		firstIpAddress := strings.Trim(xForwardedForHeaderIpAddresses[0], " ")
-
-		request.Header.Add("X-Forwarded-For", firstIpAddress)
 
 		client := http.DefaultClient
 		response, error := client.Do(request)
