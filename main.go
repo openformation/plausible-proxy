@@ -63,7 +63,6 @@ func buildGetScriptHandler(plausibleScriptUrl string) func(w http.ResponseWriter
 		// Copying headers from the origin request to the response
 		for key, values := range response.Header {
 			for _, value := range values {
-				fmt.Println(key, value)
 				w.Header().Add(key, value)
 			}
 		}
@@ -96,6 +95,7 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 			for _, value := range values {
 				// Let's not copy the Cookie header
 				if key != "Cookie" {
+					fmt.Println(key, value)
 					request.Header.Add(key, value)
 				}
 			}
