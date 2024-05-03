@@ -95,7 +95,6 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 			for _, value := range values {
 				// Let's not copy the Cookie header
 				if key != "Cookie" {
-					fmt.Println(key, value)
 					request.Header.Add(key, value)
 				}
 			}
@@ -133,7 +132,7 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 	}
 }
 
-func buildgetHealthHandler() func(w http.ResponseWriter, r *http.Request) {
+func buildGetHealthHandler() func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(http.StatusText(http.StatusOK)))
@@ -147,7 +146,7 @@ func main() {
 
 	r.Use(middleware.Logger)
 
-	r.Get("/health", buildgetHealthHandler())
+	r.Get("/health", buildGetHealthHandler())
 	r.Get("/js/{name}", buildGetScriptHandler(env.PLAUSIBLE_SCRIPT_URL))
 	r.Post("/api/event", buildPostEventHandler(env.PLAUSIBLE_API_URL))
 
