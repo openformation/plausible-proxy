@@ -108,6 +108,8 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 		xForwardedForHeaderIpAddresses := strings.Split(xForwardedForHeader, ",")
 		firstIpAddress := strings.Trim(xForwardedForHeaderIpAddresses[0], " ")
 
+		fmt.Println("X-Forwarded-For: ", xForwardedForHeader)
+
 		request.Header.Add("X-Forwarded-For", firstIpAddress)
 
 		client := http.DefaultClient
