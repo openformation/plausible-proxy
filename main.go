@@ -63,6 +63,7 @@ func buildGetScriptHandler(plausibleScriptUrl string) func(w http.ResponseWriter
 		// Copying headers from the origin request to the response
 		for key, values := range response.Header {
 			for _, value := range values {
+				fmt.Println(key, value)
 				w.Header().Add(key, value)
 			}
 		}
