@@ -102,7 +102,6 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 				isAddable := !isCookieHeader && !isCloudflareHeader
 
 				if isAddable {
-					fmt.Println(key, value)
 					request.Header.Add(key, value)
 				}
 			}
