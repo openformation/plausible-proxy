@@ -108,6 +108,13 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 			}
 		}
 
+		b, err := io.ReadAll(r.Body)
+		if err != nil {
+			fmt.Println("Error reading body", err)
+		}
+
+		fmt.Println(string(b))
+
 		client := http.DefaultClient
 		response, error := client.Do(request)
 
