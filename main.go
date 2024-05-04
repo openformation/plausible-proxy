@@ -94,11 +94,11 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 
 		for key, values := range r.Header {
 			for _, value := range values {
-				// Let's not copy the Cookie header
 				normalizedKey := strings.ToLower(key)
 				isCookieHeader := normalizedKey == "cookie"
-				isCloudflareHeader := strings.HasPrefix(key, "cf-")
+				isCloudflareHeader := strings.HasPrefix(normalizedKey, "cf-")
 
+				// Let's not copy the cookie and cloudflare headers
 				isAddable := !isCookieHeader && !isCloudflareHeader
 
 				if isAddable {
