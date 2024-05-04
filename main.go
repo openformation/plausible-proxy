@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -94,7 +95,13 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 		for key, values := range r.Header {
 			for _, value := range values {
 				// Let's not copy the Cookie header
-				if key != "Cookie" {
+				normalizedKey := strings.ToLower(key)
+				isCookieHeader := normalizedKey == "cookie"
+				isCloudflareHeader := strings.HasPrefix(key, "cf-")
+
+				isAddable := !isCookieHeader && !isCloudflareHeader
+
+				if isAddable {
 					fmt.Println(key, value)
 					request.Header.Add(key, value)
 				}
@@ -113,17 +120,17 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 
 		defer response.Body.Close()
 
-		// Copying headers from the origin request to the response
+		// Copying headers from the origin response to the final response
 		for key, values := range response.Header {
 			for _, value := range values {
 				w.Header().Add(key, value)
 			}
 		}
 
-		// Copying the status code from the origin request to the response
+		// Copying the status code from the origin response to the final response
 		w.WriteHeader(response.StatusCode)
 
-		// Copying the body from the origin request to the response
+		// Copying the body from the origin response to the final response
 		_, error = io.Copy(w, response.Body)
 
 		if error != nil {
