@@ -95,6 +95,7 @@ func buildPostEventHandler(plausibleApiUrl string) func(w http.ResponseWriter, r
 			for _, value := range values {
 				// Let's not copy the Cookie header
 				if key != "Cookie" {
+					fmt.Println(key, value)
 					request.Header.Add(key, value)
 				}
 			}
