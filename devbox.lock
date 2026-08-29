@@ -1,51 +1,41 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "flyctl@0.2.17": {
-      "last_modified": "2024-03-14T18:35:26Z",
-      "resolved": "github:NixOS/nixpkgs/ca67f3cfc013e18fe95500840fb21ad748805fc6#flyctl",
+    "flyctl@0.4.87": {
+      "last_modified": "2026-08-25T04:16:28Z",
+      "resolved": "github:NixOS/nixpkgs/ac6b2166e7a9375683b8e98f860f273222337b16#flyctl",
       "source": "devbox-search",
-      "version": "0.2.17",
+      "version": "0.4.87",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/vy626cm1x57k8h3ava7fbf9w204qjdd1-flyctl-0.2.17",
+              "path": "/nix/store/q8mvj2bbslzf4phbfvg5kgqggfbq6jvk-flyctl-0.4.87",
               "default": true
             }
           ],
-          "store_path": "/nix/store/vy626cm1x57k8h3ava7fbf9w204qjdd1-flyctl-0.2.17"
+          "store_path": "/nix/store/q8mvj2bbslzf4phbfvg5kgqggfbq6jvk-flyctl-0.4.87"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/iky7whqlarwiqqhackvkhb7yar7rim2j-flyctl-0.2.17",
+              "path": "/nix/store/yf819k723imfw1rriwa5hn09rm8a7sc3-flyctl-0.4.87",
               "default": true
             }
           ],
-          "store_path": "/nix/store/iky7whqlarwiqqhackvkhb7yar7rim2j-flyctl-0.2.17"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/j2z2z4pa4x9n2l49n1x9p53mj82hasc8-flyctl-0.2.17",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/j2z2z4pa4x9n2l49n1x9p53mj82hasc8-flyctl-0.2.17"
+          "store_path": "/nix/store/yf819k723imfw1rriwa5hn09rm8a7sc3-flyctl-0.4.87"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/d3lf65zyw9jxaw6y9bb9x83qprgnd88n-flyctl-0.2.17",
+              "path": "/nix/store/b1l7v9pr04zvjrd9d7yy3lqjivfcsq0s-flyctl-0.4.87",
               "default": true
             }
           ],
-          "store_path": "/nix/store/d3lf65zyw9jxaw6y9bb9x83qprgnd88n-flyctl-0.2.17"
+          "store_path": "/nix/store/b1l7v9pr04zvjrd9d7yy3lqjivfcsq0s-flyctl-0.4.87"
         }
       }
     },
